@@ -8,9 +8,18 @@
     <title>Monitoramento de Nível de Rios</title>
     <link rel="stylesheet" type="text/css" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+        integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
+        crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+        integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
+        crossorigin=""></script>
 </head>
 <body>
+    <h1>Mapa guia</h2>
+    <div id="map"></div>
+    <script src="maps.js"></script>
+
     <h1>Monitoramento de Nível de Rios</h1>
     <label for="river-select">Selecione uma Estação para Monitoramento:</label>
     <select id="river-select"></select>
