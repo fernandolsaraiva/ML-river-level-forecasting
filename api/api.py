@@ -15,7 +15,8 @@ def get_data(station):
         return {"error": "invalid station"}
 
     # load dataset and get last 2 hours
-    df = pd.read_csv("dados_plu_2023-04-12_2023-04-12.csv")
+    df = pd.read_csv("./data/dados_plu_2023-04-12_2023-04-12.csv")
+    
     df_int_val = df[["intervalo", "valor_leitura_flu"]]
     df_numpy = df_int_val.iloc[-13:].to_numpy()
 
@@ -47,7 +48,8 @@ def river_api():
 
     # get parameter
     station = request.args.get("station")
-
+    print(station)
+    
     # try to return a valid dictionary
     try:
         return jsonify(get_data(station))
