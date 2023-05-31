@@ -3,6 +3,8 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import pandas as pd
 
+from data_downloader import getLevel
+
 
 app = Flask(__name__)
 CORS(app)
@@ -14,9 +16,15 @@ def get_data(station):
     if station is None:
         return {"error": "invalid station"}
 
+    # load dataset and get last 2 hours (mock)
+    # df = pd.read_csv("./data/dados_plu_2023-04-12_2023-04-12.csv")
+
+    # download dataset
+    getLevel(station)
+
     # load dataset and get last 2 hours
-    df = pd.read_csv("./data/dados_plu_2023-04-12_2023-04-12.csv")
-    
+    df = pd.read_csv("Level.csv")
+
     df_int_val = df[["intervalo", "valor_leitura_flu"]]
     df_numpy = df_int_val.iloc[-13:].to_numpy()
 
@@ -49,7 +57,7 @@ def river_api():
     # get parameter
     station = request.args.get("station")
     print(station)
-    
+
     # try to return a valid dictionary
     try:
         return jsonify(get_data(station))
