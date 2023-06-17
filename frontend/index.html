@@ -16,18 +16,20 @@
         crossorigin=""></script>
 </head>
 <body>
-    <h1>Mapa guia</h2>
+    <h2>River Level Forecasting</h2>
     <div id="map"></div>
-    <script src="maps.js"></script>
 
-    <h1>Monitoramento de Nível de Rios</h1>
-    <label for="river-select">Selecione uma Estação para Monitoramento:</label>
-    <select id="river-select"></select>
-    <button id="plot-button">Gerar Gráfico</button><br><br>
+    <h2 id="chart-title"></h2>
+    <div class="chart">
+        <canvas class="chartclass" id="myChart"></canvas>
+    </div>
+
+    <script src="maps.js"></script>
     <script src="script.js"></script>
-    <h1 id="chart-title"></h1>
-    <canvas id="myChart"></canvas>
+
 </body>
+
+
 
 <footer>
     <p>Engenharia de Software - UNIFESP</p>
