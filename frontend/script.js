@@ -102,13 +102,10 @@ function downloadCSV(jsonData) {
 
 function convertToCSV(jsonData) {
   let csvContent = '';
-
   const headers = Object.keys(jsonData);
   csvContent += headers.join(',') + '\n';
-
   for (const header of headers) {
     const value = jsonData[header];
-
     if (Array.isArray(value)) {
       const row = value.map(item => JSON.stringify(item)).join(',');
       csvContent += row + '\n';
