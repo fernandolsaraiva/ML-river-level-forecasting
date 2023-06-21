@@ -61,6 +61,7 @@ def get_level(station):
 
 def main():
     """Executed from the terminal"""
+
     get_level(sys.argv[1])
 
 
