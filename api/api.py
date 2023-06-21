@@ -1,6 +1,7 @@
 import os
 from datetime import datetime
 from flask import Flask, request, jsonify
+from flask import send_file
 from flask_cors import CORS
 import pandas as pd
 
@@ -13,13 +14,11 @@ CORS(app)
 
 
 def get_data(station):
+    """Actual code to get the level"""
 
     # no name specified -> error
     if station is None:
         return {"error": "invalid station"}
-
-    # load dataset and get last 2 hours (mock)
-    # df = pd.read_csv("./data/dados_plu_2023-04-12_2023-04-12.csv")
 
     # download dataset
     unixtime = get_level(station)
@@ -61,16 +60,30 @@ def get_data(station):
 
 @app.route("/river", methods=["GET"])
 def river_api():
+    """Get level predictions for a river"""
 
     # get parameter
     station = request.args.get("station")
-    print(station)
 
     # try to return a valid dictionary
     try:
         return jsonify(get_data(station))
     except Exception:
         return jsonify({"error": "unknown error"})
+
+
+@app.route("/model", methods=["GET"])
+def download_model():
+    """Send the requested model file to the user"""
+
+    # get parameter
+    station = request.args.get("station")
+
+    # get model path
+    p = os.path.join(app.root_path, f"models/random_forest_{station}.joblib")
+
+    # send model to the user
+    return send_file(p, as_attachment=True)
 
 
 if __name__ == "__main__":
