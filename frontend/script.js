@@ -2,9 +2,13 @@ let chart = null;
 let jsonData = null;
 let downloadDataButton = null;
 let downloadAIParametersButton = null;
+let aiUrl = null;
+let aiParameterName = null;
 
 function fetchAndPlotData_station(station) {
   const apiUrl = `http://140.238.182.60:8000/river?station=${station}`;
+  aiUrl = `http://140.238.182.60:8000/model?station=${station}`;
+  aiParameterName = `random_forest_${station}.joblib`;
 
   fetch(apiUrl)
     .then(response => {
@@ -64,10 +68,10 @@ function fetchAndPlotData_station(station) {
       downloadDataButton.addEventListener('click', downloadData);
 
       if (downloadAIParametersButton) {
-        downloadAIParametersButton.removeEventListener('click', downloadData);
+        downloadAIParametersButton.removeEventListener('click', downloadAIData);
       }
       downloadAIParametersButton = document.getElementById('download-parameters-button');
-      downloadAIParametersButton.addEventListener('click', downloadData);
+      downloadAIParametersButton.addEventListener('click', downloadAIData);
 
     })
     .catch(error => {
@@ -83,6 +87,10 @@ function convertUTCToBRT(time) {
   const brtMinutes = utcMinutes;
   const brtTime = `${brtHours.toString().padStart(2, '0')}:${brtMinutes.toString().padStart(2, '0')}h`;
   return brtTime;
+}
+
+function downloadAIData() {
+  downloadFile(aiUrl, aiParameterName)
 }
 
 function downloadData() {
@@ -115,4 +123,30 @@ function convertToCSV(jsonData) {
     }
   }
   return csvContent;
+}
+
+function downloadFile(aiUrl, aiParameterName) {
+  fetch(aiUrl)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.blob();
+    })
+    .then(blob => {
+      const a = document.createElement('a');
+      const objectURL = URL.createObjectURL(blob);
+      
+      a.href = objectURL;
+      a.download = aiParameterName || 'download';
+      a.click();
+
+      setTimeout(() => {
+        URL.revokeObjectURL(objectURL);
+        a.remove();
+      }, 0);
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
 }
