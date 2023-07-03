@@ -111,8 +111,42 @@ function downloadCSV(jsonData) {
 function convertToCSV(jsonData) {
   let csvContent = '';
   const headers = Object.keys(jsonData);
-  csvContent += headers.map(header => `${header},${JSON.stringify(jsonData[header])}`).join('\n');
+  const firstItem = jsonData[headers[0]];
+
+  if (Array.isArray(firstItem)) {
+    csvContent += 'time,river level\n';
+    const rows = firstItem.map(item => `${item[0]},${removeDecimals(item[1])}`);
+    csvContent += rows.join('\n') + '\n';
+  }
+
+  const remainingHeaders = headers.slice(1);
+  if (remainingHeaders.length >= 2) {
+    csvContent += 'Station,UTC\n';
+    const stationValue = jsonData[remainingHeaders[0]];
+    const utcValue = jsonData[remainingHeaders[1]];
+    const stationRow = Array.isArray(stationValue) ? stationValue.join(',') : JSON.stringify(stationValue);
+    const utcRow = Array.isArray(utcValue) ? utcValue.join(',') : JSON.stringify(utcValue);
+    csvContent += `${stationRow},${utcRow}\n`;
+  } else {
+    for (const header of remainingHeaders) {
+      const value = jsonData[header];
+      if (Array.isArray(value)) {
+        const rows = value.map(item => `${item[0]},${removeDecimals(item[1])}`);
+        csvContent += rows.join('\n') + '\n';
+      } else {
+        const row = JSON.stringify(value);
+        csvContent += row + '\n';
+      }
+    }
+  }
   return csvContent;
+}
+
+function removeDecimals(value) {
+  if (typeof value === 'number') {
+    return Math.floor(value);
+  }
+  return value;
 }
 
 function downloadFile(aiUrl, aiParameterName) {
